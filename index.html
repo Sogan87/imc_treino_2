@@ -7,36 +7,44 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
+      background: linear-gradient(to bottom, #9BCF9C, #2D6A4F);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
     
     h1 {
-      color: #333;
-    }
-    
-    form {
-      margin-top: 20px;
-    }
-    
-    input[type="number"] {
-      width: 100px;
-    }
-    
-    button {
-      padding: 10px 20px;
-      background-color: #333;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-    }
-    
-    .result {
-      margin-top: 20px;
-    }
-  </style>
+  color: #333;
+}
+
+form {
+  margin-top: 20px;
+}
+
+input[type="number"] {
+  width: 100px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 20px;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.result.show {
+  opacity: 1;
+}
+</style>
 </head>
 <body>
   <h1>Calculadora de IMC</h1>
-  
   <form id="imcForm">
     <label for="peso">Peso (kg):</label>
     <input type="number" id="peso" required>
@@ -46,9 +54,7 @@
     <br>
     <button type="submit">Calcular IMC</button>
   </form>
-  
   <div id="resultado" class="result"></div>
-  
   <script>
     const form = document.getElementById('imcForm');
     const resultadoDiv = document.getElementById('resultado');
@@ -66,6 +72,8 @@
         resultadoDiv.textContent = 'Por favor, insira um peso e uma altura válidos.';
         return;
       }
+
+      resultadoDiv.classList.remove('show');
       
       fetch('/calcular-imc', {
         method: 'POST',
@@ -79,6 +87,7 @@
         const imc = data.imc.toFixed(2);
         const resultado = data.resultado;
         resultadoDiv.textContent = `Seu IMC é ${imc}. Você está ${resultado}.`;
+        resultadoDiv.classList.add('show');
       })
       .catch(error => {
         resultadoDiv.textContent = 'Ocorreu um erro ao calcular o IMC.';
